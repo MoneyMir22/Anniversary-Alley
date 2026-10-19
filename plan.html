@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Planning Profile — Anniversary Alley</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #241242;
+    --navy-deep: #0c0620;
+    --amber: #ffb200;
+    --amber-soft: #ffd873;
+    --brick: #ff4d5e;
+    --paper: #f6f1e8;
+    --ink: #1b2338;
+    --muted: #4a5170;
+    --line: #e2d6bd;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, sans-serif;
+    line-height: 1.5;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  header.top {
+    background: radial-gradient(ellipse at 50% -10%, #4a1f6b 0%, var(--navy) 50%, var(--navy-deep) 100%);
+    color: var(--paper);
+    padding: calc(2.6rem + env(safe-area-inset-top, 0px)) 1.5rem 3rem;
+    text-align: center;
+  }
+  header.top a.back { color: var(--amber-soft); font-size: 0.9rem; text-decoration: none; }
+  header.top h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: clamp(1.8rem, 5.5vw, 2.6rem);
+    line-height: 1.1;
+    margin: 1rem 0 0.7rem;
+  }
+  header.top p { color: #d9dced; max-width: 480px; margin: 0 auto; }
+  .spots-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    margin-top: 1.1rem; padding: 0.4rem 0.9rem; border-radius: 999px;
+    background: rgba(255,77,94,0.14); border: 1px solid rgba(255,77,94,0.45);
+    color: #ffd2d6; font-size: 0.88rem;
+  }
+  .spots-badge strong { color: #fff; }
+  .spots-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brick); box-shadow: 0 0 8px 2px rgba(255,77,94,0.7); }
+
+  .progress {
+    position: sticky; top: 0; z-index: 5;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    padding: 0.7rem 1.5rem;
+  }
+  .progress-inner { max-width: 640px; margin: 0 auto; display: flex; align-items: center; gap: 0.8rem; font-size: 0.85rem; color: var(--muted); }
+  .bar { flex: 1; height: 6px; background: #eadfca; border-radius: 99px; overflow: hidden; }
+  .bar span { display: block; height: 100%; width: 0; background: var(--brick); transition: width 0.2s ease; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+  fieldset {
+    border: 1px solid var(--line);
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.4rem 1.2rem 1.5rem;
+    margin: 0 0 1.4rem;
+    min-width: 0;
+  }
+  legend {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.15rem;
+    padding: 0 0.4rem;
+  }
+  .section-note { color: var(--muted); font-size: 0.92rem; margin: 0 0 1.1rem; }
+  .field { margin-bottom: 1.05rem; }
+  .field:last-child { margin-bottom: 0; }
+  label.q { display: block; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.4rem; }
+  .hint { font-weight: 400; color: #6b7190; font-size: 0.85rem; }
+  .req { color: var(--brick); }
+  input[type="text"], input[type="email"], input[type="tel"], input[type="date"], input[type="number"], select, textarea {
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    padding: 0.8rem 0.9rem;
+    border-radius: 8px;
+    border: 1px solid #d8cfb8;
+    background: #fff;
+    color: var(--ink);
+  }
+  textarea { resize: vertical; min-height: 84px; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--amber); outline-offset: 1px; border-color: transparent; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+  @media (max-width: 520px) { .row { grid-template-columns: 1fr; } }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .chip { position: relative; }
+  .chip input { position: absolute; opacity: 0; pointer-events: none; }
+  .chip span {
+    display: inline-block;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid #d8cfb8;
+    border-radius: 999px;
+    font-size: 0.92rem;
+    cursor: pointer;
+    background: #fff;
+    user-select: none;
+  }
+  .chip input:checked + span { background: var(--navy); border-color: var(--navy); color: var(--paper); }
+  .chip input:focus-visible + span { outline: 2px solid var(--amber); outline-offset: 2px; }
+
+  .scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.4rem; }
+  .scale .chip span { width: 100%; text-align: center; padding: 0.55rem 0; border-radius: 8px; }
+  .scale-labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: #6b7190; margin-top: 0.3rem; }
+
+  .consent { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.92rem; color: var(--muted); }
+  .consent input { margin-top: 0.25rem; width: 18px; height: 18px; flex: 0 0 auto; }
+
+  button.cta {
+    width: 100%;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 1.05rem;
+    padding: 1rem 1.2rem; border-radius: 8px; border: none;
+    background: var(--brick); color: var(--paper); cursor: pointer;
+  }
+  button.cta:hover { background: #ff2e42; }
+  button.cta:disabled { opacity: 0.6; cursor: default; }
+  .error { color: #b3261e; font-size: 0.92rem; margin-top: 0.8rem; display: none; }
+
+  .done { display: none; text-align: center; padding: 3rem 1rem; }
+  .done h2 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.7rem; margin: 0 0 0.8rem; }
+  .done p { color: var(--muted); max-width: 440px; margin: 0 auto 0.8rem; }
+  .done a { color: var(--brick); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="back" href="index.html">← Anniversary Alley</a>
+  <h1>Your planning profile</h1>
+  <p>Tell us about them, and about you. We'll use this to research real options and send you a plan to react to. Nothing is booked or charged until you approve an itemized invoice.</p>
+  <p class="spots-badge"><span class="spots-dot"></span>First 10 planned dates free · only <strong class="spots-left">3</strong> left</p>
+</header>
+
+<div class="progress" aria-hidden="true">
+  <div class="progress-inner"><div class="bar"><span id="bar"></span></div><span id="pct">0%</span></div>
+</div>
+
+<main>
+<form id="planForm" name="plan-details" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+  <input type="hidden" name="form-name" value="plan-details">
+  <p style="position:absolute;left:-9999px;" aria-hidden="true"><label>Leave this blank: <input name="bot-field"></label></p>
+
+  <fieldset>
+    <legend>1. About you</legend>
+    <div class="row">
+      <div class="field"><label class="q" for="name">Your name <span class="req">*</span></label><input type="text" id="name" name="name" autocomplete="name" required></div>
+      <div class="field"><label class="q" for="email">Email <span class="req">*</span></label><input type="email" id="email" name="email" autocomplete="email" required></div>
+    </div>
+    <div class="row">
+      <div class="field"><label class="q" for="phone">Phone <span class="req">*</span></label><input type="tel" id="phone" name="phone" autocomplete="tel" required></div>
+      <div class="field">
+        <label class="q" for="contactPref">Best way to reach you</label>
+        <select id="contactPref" name="contact-preference">
+          <option>Text</option><option>Email</option><option>Phone call</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label class="q" for="city">City / area for the date <span class="req">*</span></label>
+      <input type="text" id="city" name="city" placeholder="e.g. Bowie, MD or Washington, DC" required>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>2. The occasion</legend>
+    <div class="row">
+      <div class="field"><label class="q" for="annivDate">Anniversary date <span class="req">*</span></label><input type="date" id="annivDate" name="anniversary-date" required></div>
+      <div class="field"><label class="q" for="years">Which anniversary? <span class="hint">(years)</span></label><input type="number" id="years" name="years-together" min="0" max="80" inputmode="numeric"></div>
+    </div>
+    <div class="field">
+      <label class="q" for="occasionType">Type of anniversary</label>
+      <select id="occasionType" name="occasion-type">
+        <option>Wedding anniversary</option><option>Dating anniversary</option><option>Engagement anniversary</option><option>Other milestone</option>
+      </select>
+    </div>
+    <div class="row">
+      <div class="field"><label class="q" for="planDate">Date you want to celebrate <span class="req">*</span></label><input type="date" id="planDate" name="celebration-date" required></div>
+      <div class="field">
+        <label class="q" for="flex">How flexible is that?</label>
+        <select id="flex" name="date-flexibility">
+          <option>Must be that exact day</option><option>Within a few days</option><option>Any weekend that month</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label class="q">Time of day</label>
+      <div class="chips" data-group="time-of-day">
+        <label class="chip"><input type="checkbox" value="Morning"><span>Morning</span></label>
+        <label class="chip"><input type="checkbox" value="Afternoon"><span>Afternoon</span></label>
+        <label class="chip"><input type="checkbox" value="Evening"><span>Evening</span></label>
+        <label class="chip"><input type="checkbox" value="Full day"><span>Full day</span></label>
+        <label class="chip"><input type="checkbox" value="Overnight / weekend"><span>Overnight / weekend</span></label>
+      </div>
+      <input type="hidden" name="time-of-day">
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>3. About your partner</legend>
+    <p class="section-note">The details here are what make a plan feel personal instead of generic.</p>
+    <div class="field"><label class="q" for="partnerName">Their first name <span class="req">*</span></label><input type="text" id="partnerName" name="partner-name" required></div>
+    <div class="field">
+      <label class="q">What are they into? <span class="hint">(pick any)</span></label>
+      <div class="chips" data-group="partner-interests">
+        <label class="chip"><input type="checkbox" value="Food & restaurants"><span>Food &amp; restaurants</span></label>
+        <label class="chip"><input type="checkbox" value="Wine & cocktails"><span>Wine &amp; cocktails</span></label>
+        <label class="chip"><input type="checkbox" value="Live music"><span>Live music</span></label>
+        <label class="chip"><input type="checkbox" value="Comedy"><span>Comedy</span></label>
+        <label class="chip"><input type="checkbox" value="Theater & arts"><span>Theater &amp; arts</span></label>
+        <label class="chip"><input type="checkbox" value="Museums"><span>Museums</span></label>
+        <label class="chip"><input type="checkbox" value="Outdoors & nature"><span>Outdoors &amp; nature</span></label>
+        <label class="chip"><input type="checkbox" value="Spa & relaxation"><span>Spa &amp; relaxation</span></label>
+        <label class="chip"><input type="checkbox" value="Sports"><span>Sports</span></label>
+        <label class="chip"><input type="checkbox" value="Adventure"><span>Adventure</span></label>
+        <label class="chip"><input type="checkbox" value="Classes & workshops"><span>Classes &amp; workshops</span></label>
+        <label class="chip"><input type="checkbox" value="Travel"><span>Travel</span></label>
+        <label class="chip"><input type="checkbox" value="Fashion & shopping"><span>Fashion &amp; shopping</span></label>
+        <label class="chip"><input type="checkbox" value="Staying in"><span>Staying in</span></label>
+      </div>
+      <input type="hidden" name="partner-interests">
+    </div>
+    <div class="field"><label class="q" for="favorites">Favorites <span class="hint">(food, cuisine, drink, flower, color, artist, place)</span></label><textarea id="favorites" name="partner-favorites" rows="3"></textarea></div>
+    <div class="field"><label class="q" for="dislikes">Anything they dislike or we should avoid?</label><textarea id="dislikes" name="partner-dislikes" rows="2" placeholder="e.g. hates crowds, not into seafood, afraid of heights"></textarea></div>
+    <div class="field"><label class="q" for="dietary">Dietary needs <span class="hint">(for both of you)</span></label><input type="text" id="dietary" name="dietary-needs" placeholder="e.g. vegetarian, no pork, nut allergy, none"></div>
+    <div class="field">
+      <label class="q" for="loveLanguage">What makes them feel most appreciated?</label>
+      <select id="loveLanguage" name="love-language">
+        <option value="">Not sure</option><option>Quality time</option><option>Thoughtful gifts</option><option>Words / something written</option><option>Being taken care of</option><option>Physical affection</option>
+      </select>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>4. The plan</legend>
+    <div class="field">
+      <label class="q">What should we plan? <span class="req">*</span> <span class="hint">(pick any)</span></label>
+      <div class="chips" data-group="plan-components" data-required="true">
+        <label class="chip"><input type="checkbox" value="Dinner reservation"><span>Dinner reservation</span></label>
+        <label class="chip"><input type="checkbox" value="Activity / experience"><span>Activity / experience</span></label>
+        <label class="chip"><input type="checkbox" value="Gift"><span>Gift</span></label>
+        <label class="chip"><input type="checkbox" value="Flowers"><span>Flowers</span></label>
+        <label class="chip"><input type="checkbox" value="Hotel / getaway"><span>Hotel / getaway</span></label>
+        <label class="chip"><input type="checkbox" value="Surprise at home"><span>Surprise at home</span></label>
+        <label class="chip"><input type="checkbox" value="Transportation"><span>Transportation</span></label>
+      </div>
+      <input type="hidden" name="plan-components">
+    </div>
+    <div class="field">
+      <label class="q">Overall vibe</label>
+      <div class="chips" data-group="vibe">
+        <label class="chip"><input type="checkbox" value="Romantic & classic"><span>Romantic &amp; classic</span></label>
+        <label class="chip"><input type="checkbox" value="Fun & playful"><span>Fun &amp; playful</span></label>
+        <label class="chip"><input type="checkbox" value="Low-key & cozy"><span>Low-key &amp; cozy</span></label>
+        <label class="chip"><input type="checkbox" value="Luxe & upscale"><span>Luxe &amp; upscale</span></label>
+        <label class="chip"><input type="checkbox" value="Adventurous"><span>Adventurous</span></label>
+        <label class="chip"><input type="checkbox" value="Nostalgic"><span>Nostalgic</span></label>
+      </div>
+      <input type="hidden" name="vibe">
+    </div>
+    <div class="field">
+      <label class="q">How much of a surprise should it be?</label>
+      <div class="scale" data-group="surprise-level" data-single="true">
+        <label class="chip"><input type="checkbox" value="1"><span>1</span></label>
+        <label class="chip"><input type="checkbox" value="2"><span>2</span></label>
+        <label class="chip"><input type="checkbox" value="3"><span>3</span></label>
+        <label class="chip"><input type="checkbox" value="4"><span>4</span></label>
+        <label class="chip"><input type="checkbox" value="5"><span>5</span></label>
+      </div>
+      <div class="scale-labels"><span>We'll plan it together</span><span>Total surprise</span></div>
+      <input type="hidden" name="surprise-level">
+    </div>
+    <div class="field"><label class="q" for="memories">A favorite memory or past date that went really well</label><textarea id="memories" name="favorite-memory" rows="3" placeholder="Where you met, a first date spot, a trip you still talk about"></textarea></div>
+    <div class="field"><label class="q" for="ideas">Ideas you already have, or must-haves</label><textarea id="ideas" name="ideas" rows="2"></textarea></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>5. Budget &amp; logistics</legend>
+    <div class="field">
+      <label class="q" for="budget">Total budget for bookings <span class="req">*</span> <span class="hint">(not counting our fee)</span></label>
+      <select id="budget" name="budget" required>
+        <option value="">Choose a range</option>
+        <option>Under $150</option><option>$150–$300</option><option>$300–$600</option><option>$600–$1,000</option><option>$1,000–$2,500</option><option>$2,500+</option>
+      </select>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label class="q" for="travel">How far will you travel?</label>
+        <select id="travel" name="travel-distance">
+          <option>Within 15 minutes</option><option>Within 30 minutes</option><option>Within an hour</option><option>Up to a few hours (getaway)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="q" for="transport">Getting around</label>
+        <select id="transport" name="transportation">
+          <option>We'll drive</option><option>Rideshare / car service</option><option>Public transit</option><option>Arrange it for us</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label class="q" for="kids">Need childcare or pet care arranged?</label>
+      <select id="kids" name="care-needed">
+        <option>No</option><option>Yes, childcare</option><option>Yes, pet care</option><option>Yes, both</option>
+      </select>
+    </div>
+    <div class="field"><label class="q" for="notes">Anything else we should know?</label><textarea id="notes" name="additional-notes" rows="3" placeholder="Accessibility needs, work schedules, things already booked"></textarea></div>
+    <div class="field">
+      <label class="q" for="heard">How did you hear about us?</label>
+      <select id="heard" name="referral-source">
+        <option value="">Choose one</option><option>Instagram</option><option>Facebook</option><option>TikTok</option><option>Google</option><option>Friend or family</option><option>Other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label class="consent"><input type="checkbox" id="consent" name="consent" value="yes" required><span>I understand nothing is booked or charged until I approve an itemized invoice (the $79 planning fee plus 10% of what's booked, unless I receive a free spot). <span class="req">*</span></span></label>
+    </div>
+  </fieldset>
+
+  <button type="submit" class="cta" id="submitBtn">Send my planning profile</button>
+  <p class="error" id="errorMsg"></p>
+</form>
+
+<div class="done" id="doneMsg">
+  <h2>You're in. Let's make it a good one.</h2>
+  <p>We've got your planning profile. Expect to hear from us within 48 hours with a first direction for the plan.</p>
+  <p>Questions in the meantime? <a href="mailto:hello@anniversaryalley.com">hello@anniversaryalley.com</a></p>
+  <p><a href="index.html">← Back to Anniversary Alley</a></p>
+</div>
+</main>
+
+<script>
+// Keep in sync with FREE_SPOTS_LEFT in index.html.
+const FREE_SPOTS_LEFT = 3;
+document.querySelectorAll('.spots-left').forEach(el => { el.textContent = FREE_SPOTS_LEFT; });
+document.querySelectorAll('.spots-badge').forEach(el => { if (FREE_SPOTS_LEFT <= 0) el.style.display = 'none'; });
+
+const form = document.getElementById('planForm');
+const f = n => form.elements[n];
+
+// Prefill from the short form on the home page.
+const qs = new URLSearchParams(location.search);
+if (qs.get('name')) f('name').value = qs.get('name');
+if (qs.get('email')) f('email').value = qs.get('email');
+if (qs.get('date')) f('anniversary-date').value = qs.get('date');
+
+// Chip groups: single-select where marked, and copy choices into the hidden field.
+document.querySelectorAll('[data-group]').forEach(group => {
+  const hidden = form.querySelector(`input[type="hidden"][name="${group.dataset.group}"]`);
+  const boxes = group.querySelectorAll('input[type="checkbox"]');
+  boxes.forEach(box => box.addEventListener('change', () => {
+    if (group.dataset.single && box.checked) boxes.forEach(b => { if (b !== box) b.checked = false; });
+    hidden.value = [...boxes].filter(b => b.checked).map(b => b.value).join(', ');
+    updateProgress();
+  }));
+});
+
+// Progress bar across the key fields.
+const tracked = ['name','email','phone','city','anniversary-date','celebration-date','partner-name','partner-interests','partner-favorites','plan-components','vibe','surprise-level','budget','favorite-memory'];
+function updateProgress() {
+  const filled = tracked.filter(n => (f(n) && String(f(n).value).trim())).length;
+  const pct = Math.round(filled / tracked.length * 100);
+  document.getElementById('bar').style.width = pct + '%';
+  document.getElementById('pct').textContent = pct + '%';
+}
+form.addEventListener('input', updateProgress);
+updateProgress();
+
+const errorMsg = document.getElementById('errorMsg');
+function showError(msg, el) {
+  errorMsg.textContent = msg;
+  errorMsg.style.display = 'block';
+  if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); if (el.focus) el.focus({ preventScroll: true }); }
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errorMsg.style.display = 'none';
+
+  for (const el of form.querySelectorAll('[required]')) {
+    const empty = el.type === 'checkbox' ? !el.checked : !el.value.trim();
+    if (empty) {
+      const label = el.type === 'checkbox' ? 'Please confirm the invoice terms.' : 'Please fill in every field marked *.';
+      return showError(label, el);
+    }
+  }
+  if (!/^\S+@\S+\.\S+$/.test(f('email').value.trim())) return showError('Please enter a valid email.', f('email'));
+  const comps = document.querySelector('[data-group="plan-components"]');
+  if (!f('plan-components').value) return showError('Pick at least one thing for us to plan.', comps);
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  // Only named fields (chip checkboxes are unnamed; their values are in hidden fields).
+  const body = new URLSearchParams(new FormData(form)).toString();
+  try {
+    const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    form.style.display = 'none';
+    document.querySelector('.progress').style.display = 'none';
+    document.getElementById('doneMsg').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = 'Send my planning profile';
+    showError('Something went wrong sending your profile. Please try again, or email hello@anniversaryalley.com.');
+  }
+});
+</script>
+</body>
+</html>

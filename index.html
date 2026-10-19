@@ -145,6 +145,27 @@
     color: #d9b86a;
     margin-top: 0.3rem;
   }
+  .spots-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0 0;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(255,77,94,0.14);
+    border: 1px solid rgba(255,77,94,0.45);
+    color: #ffd2d6;
+    font-size: 0.88rem;
+  }
+  .spots-badge strong { color: #fff; }
+  .spots-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--brick);
+    box-shadow: 0 0 8px 2px rgba(255,77,94,0.7);
+    animation: flicker 1.8s ease-in-out infinite;
+  }
+  .contact .spots-badge { background: rgba(255,77,94,0.08); color: #8a2a35; }
+  .contact .spots-badge strong { color: var(--brick); }
   .skip-ahead {
     font-size: 0.85rem;
     color: #c9c2e8;
@@ -359,7 +380,7 @@
     <p class="confirm" id="confirmMsg">You're on the list. We'll be in touch before your date sneaks up on you.</p>
     <p class="privacy-note">🔒 Your info is never shared.</p>
     <p class="fineprint">Early access. First 10 members get their first planned date free.</p>
-    <p class="social-proof">Be one of our first members.</p>
+    <p class="spots-badge"><span class="spots-dot"></span>Only <strong class="spots-left">3</strong> free spots left</p>
     <p class="app-soon">📱 iOS &amp; Android app — coming soon</p>
     <p class="skip-ahead">Already know you want it planned? <a href="#contact">Skip ahead →</a></p>
   </div>
@@ -379,7 +400,7 @@
       <div class="step-num">2</div>
       <div class="step-body">
         <h3>Tell us what they love</h3>
-        <p>A quick form: their taste, a budget range, anything you already have in mind. Takes about two minutes, and the more specific you are, the better the plan.</p>
+        <p>Once you decide to plan with us, you'll fill out a planning profile: their taste, your budget, dates that work, and anything to avoid. Takes about five minutes, and the more specific you are, the better the plan.</p>
       </div>
     </div>
     <div class="step">
@@ -425,7 +446,8 @@
 
 <section class="contact" id="contact">
   <h2>Ready to start planning?</h2>
-  <p class="contact-sub">Tell us a bit about the date and we'll reach out to put the plan together.</p>
+  <p class="contact-sub">Start with the basics. Next, you'll fill out a short planning profile so we can build the plan around them.</p>
+  <p class="spots-badge"><span class="spots-dot"></span>First 10 planned dates free · only <strong class="spots-left">3</strong> left</p>
   <form class="contact-form" id="contactForm" name="plan-request" method="POST" data-netlify="true" netlify-honeypot="bot-field-2">
     <input type="hidden" name="form-name" value="plan-request">
     <p style="position:absolute;left:-9999px;" aria-hidden="true"><label>Leave this blank: <input name="bot-field-2"></label></p>
@@ -433,9 +455,9 @@
     <input type="email" id="contactEmail" name="email" placeholder="Your email" required>
     <input type="date" id="contactDate" name="anniversary-date" required aria-label="Your anniversary date">
     <textarea id="contactMessage" name="message" placeholder="Anything we should know — their taste, your budget, ideas you already have" rows="3"></textarea>
-    <button type="submit" class="cta" id="contactSubmitBtn">Let's plan it</button>
+    <button type="submit" class="cta" id="contactSubmitBtn">Continue to planning profile →</button>
   </form>
-  <p class="confirm" id="contactConfirmMsg">Got it — we'll be in touch soon to start planning.</p>
+  <p class="confirm" id="contactConfirmMsg">Got it. Taking you to your planning profile…</p>
 </section>
 
 <section class="blog-preview">
@@ -483,6 +505,11 @@
 <p class="footer-note">Anniversary Alley &middot; built for people who mean well and forget dates.<br><a href="blog.html">Blog</a> &middot; Questions? <a href="mailto:hello@anniversaryalley.com">hello@anniversaryalley.com</a></p>
 
 <script>
+// Update this one number as free spots get claimed (shows in both badges).
+const FREE_SPOTS_LEFT = 3;
+document.querySelectorAll('.spots-left').forEach(el => { el.textContent = FREE_SPOTS_LEFT; });
+document.querySelectorAll('.spots-badge').forEach(el => { if (FREE_SPOTS_LEFT <= 0) el.style.display = 'none'; });
+
 (async () => {
   let db = null;
   try { db = await claude.use("db"); } catch (e) { db = null; }
@@ -583,9 +610,11 @@
     if (saved) {
       contactForm.style.display = 'none';
       contactConfirmMsg.style.display = 'block';
+      const params = new URLSearchParams({ name, email, date: annivDate });
+      window.location.href = 'plan.html?' + params.toString();
     } else {
       contactBtn.disabled = false;
-      contactBtn.textContent = "Let's plan it";
+      contactBtn.textContent = 'Continue to planning profile →';
       contactConfirmMsg.textContent = 'Something went wrong — please try again.';
       contactConfirmMsg.style.display = 'block';
       contactConfirmMsg.style.color = '#f0a0a0';
