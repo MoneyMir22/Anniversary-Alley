@@ -355,6 +355,23 @@
   .faq-item h3 { margin: 0 0 0.35rem; font-size: 1.02rem; font-weight: 600; }
   .faq-item p { margin: 0; color: #4a5170; font-size: 0.97rem; }
 </style>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '395674804265892');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=395674804265892&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 </head>
 <body>
 
@@ -562,6 +579,7 @@ document.querySelectorAll('.spots-badge').forEach(el => { if (FREE_SPOTS_LEFT <=
     } catch (err) { /* ignore, handled below */ }
 
     if (saved) {
+      try { if (window.fbq) fbq('track', 'Lead'); } catch (e) {}
       form.style.display = 'none';
       confirmMsg.style.display = 'block';
     } else {
@@ -611,7 +629,9 @@ document.querySelectorAll('.spots-badge').forEach(el => { if (FREE_SPOTS_LEFT <=
       contactForm.style.display = 'none';
       contactConfirmMsg.style.display = 'block';
       const params = new URLSearchParams({ name, email, date: annivDate });
-      window.location.href = 'plan.html?' + params.toString();
+      try { if (window.fbq) fbq('track', 'Contact'); } catch (e) {}
+      // Short pause so the pixel event goes out before the page changes.
+      setTimeout(() => { window.location.href = 'plan.html?' + params.toString(); }, 400);
     } else {
       contactBtn.disabled = false;
       contactBtn.textContent = 'Continue to planning profile →';
