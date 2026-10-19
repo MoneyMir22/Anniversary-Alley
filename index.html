@@ -166,15 +166,35 @@
   }
   .contact .spots-badge { background: rgba(255,77,94,0.08); color: #8a2a35; }
   .contact .spots-badge strong { color: var(--brick); }
-  .skip-ahead {
-    font-size: 0.85rem;
-    color: #c9c2e8;
-    margin-top: 1.3rem;
+  .date-label {
+    text-align: left;
+    font-size: 0.9rem;
+    color: #d9dced;
+    margin: 0.2rem 0 -0.3rem;
   }
-  .skip-ahead a {
-    color: var(--amber-soft);
-    text-decoration: underline;
+  .date-label span { color: #9aa3c2; font-size: 0.82rem; }
+  .md-row { display: flex; gap: 0.6rem; }
+  .md-row select:first-child { flex: 2; }
+  .md-row select:last-child { flex: 1; }
+  select {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #3a4262;
+    background: #232a45;
+    color: var(--paper);
+    color-scheme: dark;
+    min-width: 0;
   }
+  .paid-path {
+    text-align: center;
+    font-size: 0.82rem;
+    color: #8a8fa6;
+    margin: 0;
+    padding: 1.4rem 1.5rem 0;
+  }
+  .paid-path a { color: inherit; text-decoration: underline; }
 
   .path { max-width: 640px; margin: 0 auto; padding: 3.5rem 1.5rem 4rem; }
   .path h2 {
@@ -392,17 +412,28 @@ src="https://www.facebook.com/tr?id=395674804265892&ev=PageView&noscript=1"
       <input type="hidden" name="form-name" value="signup">
       <p style="position:absolute;left:-9999px;" aria-hidden="true"><label>Leave this blank: <input name="bot-field"></label></p>
       <input type="email" id="email" name="email" placeholder="Your email" required>
-      <input type="date" id="annivDate" name="anniversary-date" required aria-label="Your anniversary date">
+      <label for="annivDate" class="date-label">Your anniversary date <span>(month &amp; day is all we need)</span></label>
+      <div class="md-row">
+        <select id="annivDate" required aria-label="Anniversary month">
+          <option value="" disabled selected>Month</option>
+          <option value="01">January</option><option value="02">February</option><option value="03">March</option>
+          <option value="04">April</option><option value="05">May</option><option value="06">June</option>
+          <option value="07">July</option><option value="08">August</option><option value="09">September</option>
+          <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+        </select>
+        <select id="annivDay" required aria-label="Anniversary day">
+          <option value="" disabled selected>Day</option>
+        </select>
+      </div>
+      <input type="hidden" name="anniversary-date" id="annivValue">
       <button type="submit" class="cta" id="submitBtn">Get reminded — free</button>
     </form>
     <p class="confirm" id="confirmMsg">You're on the list. We'll be in touch before your date sneaks up on you.</p>
     <p class="privacy-note">🔒 Your info is never shared.</p>
-    <p class="fineprint">Early access. First 10 members get their first planned date free.</p>
-    <p class="spots-badge"><span class="spots-dot"></span>Only <strong class="spots-left">3</strong> free spots left</p>
-    <p class="app-soon">📱 iOS &amp; Android app — coming soon</p>
-    <p class="skip-ahead">Already know you want it planned? <a href="#contact">Skip ahead →</a></p>
   </div>
 </section>
+
+<p class="paid-path">Want the whole date planned for you? <a href="#contact">See planning →</a></p>
 
 <section class="path">
   <h2>How it works</h2>
@@ -549,6 +580,22 @@ document.querySelectorAll('.spots-badge').forEach(el => { if (FREE_SPOTS_LEFT <=
     });
   }
 
+  (function () {
+    const m = document.getElementById('annivDate'), d = document.getElementById('annivDay');
+    function fillDays() {
+      const max = { '02': 29, '04': 30, '06': 30, '09': 30, '11': 30 }[m.value] || 31;
+      const keep = d.value;
+      d.length = 1;
+      for (let i = 1; i <= max; i++) {
+        const v = String(i).padStart(2, '0');
+        d.add(new Option(i, v));
+      }
+      if (keep && +keep <= max) d.value = keep;
+    }
+    m.addEventListener('change', fillDays);
+    fillDays();
+  })();
+
   const form = document.getElementById('signupForm');
   const btn = document.getElementById('submitBtn');
   const confirmMsg = document.getElementById('confirmMsg');
@@ -556,8 +603,11 @@ document.querySelectorAll('.spots-badge').forEach(el => { if (FREE_SPOTS_LEFT <=
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('email').value.trim();
-    const annivDate = document.getElementById('annivDate').value;
-    if (!email || !annivDate) return;
+    const annivMonth = document.getElementById('annivDate').value;
+    const annivDayVal = document.getElementById('annivDay').value;
+    if (!email || !annivMonth || !annivDayVal) return;
+    const annivDate = annivMonth + '-' + annivDayVal;
+    document.getElementById('annivValue').value = annivDate;
 
     btn.disabled = true;
     btn.textContent = 'Adding you…';
