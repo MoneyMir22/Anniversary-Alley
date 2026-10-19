@@ -629,7 +629,7 @@ document.querySelectorAll('.spots-badge').forEach(el => { if (FREE_SPOTS_LEFT <=
       contactForm.style.display = 'none';
       contactConfirmMsg.style.display = 'block';
       const params = new URLSearchParams({ name, email, date: annivDate });
-      try { if (window.fbq) fbq('track', 'Contact'); } catch (e) {}
+      try { if (window.fbq) fbq('track', 'Lead'); } catch (e) {}
       // Short pause so the pixel event goes out before the page changes.
       setTimeout(() => { window.location.href = 'plan.html?' + params.toString(); }, 400);
     } else {
