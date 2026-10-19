@@ -21,6 +21,13 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=395674804265892&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  document.getElementById('signupForm').addEventListener('submit', function () {
+    fbq('track', 'Lead');
+  });
+});
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
