@@ -404,9 +404,8 @@ src="https://www.facebook.com/tr?id=395674804265892&ev=PageView&noscript=1"
   <div class="hero-inner">
     <p class="eyebrow-line">Anniversary Alley</p>
     <p class="tagline">Every anniversary. Zero excuses.</p>
-    <h1>Never forget an anniversary again.</h1>
-    <p class="sub"><strong>Your go-to place for anniversary planning.</strong></p>
-    <p class="sub">We remind you before it's too late.</p>
+    <h1>Your anniversary is coming. We'll make sure you're ready.</h1>
+    <p class="sub">Free reminders 30, 7 and 1 day out, plus a fully planned date whenever you want one.</p>
 
     <form class="hero-form" id="signupForm" name="signup" method="POST" data-netlify="true" netlify-honeypot="bot-field">
       <input type="hidden" name="form-name" value="signup">
@@ -426,7 +425,7 @@ src="https://www.facebook.com/tr?id=395674804265892&ev=PageView&noscript=1"
         </select>
       </div>
       <input type="hidden" name="anniversary-date" id="annivValue">
-      <button type="submit" class="cta" id="submitBtn">Get reminded — free</button>
+      <button type="submit" class="cta" id="submitBtn">Remind me — free</button>
     </form>
     <p class="confirm" id="confirmMsg">You're on the list. We'll be in touch before your date sneaks up on you.</p>
     <p class="privacy-note">🔒 Your info is never shared.</p>
@@ -555,7 +554,7 @@ src="https://www.facebook.com/tr?id=395674804265892&ev=PageView&noscript=1"
 
 <script>
 // Update this one number as free spots get claimed (shows in both badges).
-const FREE_SPOTS_LEFT = 3;
+const FREE_SPOTS_LEFT = 0;
 document.querySelectorAll('.spots-left').forEach(el => { el.textContent = FREE_SPOTS_LEFT; });
 document.querySelectorAll('.spots-badge').forEach(el => { if (FREE_SPOTS_LEFT <= 0) el.style.display = 'none'; });
 
@@ -635,7 +634,7 @@ document.querySelectorAll('.spots-badge').forEach(el => { if (FREE_SPOTS_LEFT <=
       confirmMsg.style.display = 'block';
     } else {
       btn.disabled = false;
-      btn.textContent = 'Get reminded — free';
+      btn.textContent = 'Remind me — free';
       confirmMsg.textContent = 'Something went wrong — please try again.';
       confirmMsg.style.display = 'block';
       confirmMsg.style.color = '#f0a0a0';
